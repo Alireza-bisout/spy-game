@@ -11,12 +11,13 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: "20"
-          cache: npm
+          node-version: "22"
 
-      - run: npm ci
+      - name: Install JS deps
+        run: npm install
 
-      - run: npm run build
+      - name: Next export
+        run: npx next build
 
       - uses: actions/setup-java@v4
         with:
@@ -27,7 +28,7 @@ jobs:
 
       - name: Capacitor Android
         run: |
-          npm i --no-save @capacitor/core @capacitor/cli @capacitor/android
+          npm install @capacitor/core @capacitor/cli @capacitor/android
           if [ ! -f capacitor.config.json ] && [ ! -f capacitor.config.ts ]; then
             npx cap init "Spy" com.example.spy --web-dir out
           fi
