@@ -1,0 +1,25 @@
+بيلد APK روي GitHub (بدون Android Studio و بدون SDK روي ويندوز)
+
+1) پروژه spy-game را در GitHub بگذارید (New repository، بعد در پوشه پروژه):
+
+   git init
+   git add .
+   git commit -m "spy game"
+   git branch -M main
+   git remote add origin https://github.com/USER/REPO.git
+   git push -u origin main
+
+   پوشه node_modules و .next را push نکنید (.gitignore پیش‌فرض Next کافی است).
+   پوشه android را لازم نیست push کنید؛ Actions خودش می‌سازد.
+
+2) فایل .github/workflows/apk.yml باید در ریشه مخزن باشد
+   (همین zip را روی پروژه بریزید تا کپی شود).
+
+3) در GitHub:
+   Actions → apk → Run workflow → Run workflow
+
+4) چند دقیقه صبر کنید. وقتی سبز شد:
+   روی همان run → Artifacts → spy-apk
+   فایل app-debug.apk را دانلود کنید.
+
+اگر npm ci به خاطر نبودن package-lock خطا داد، در workflow همان را npm install کنید.

@@ -1,0 +1,163 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: "IranYekanFaNum";
+  src: url("/fonts/FaNum/woff/iranyekanwebregularfanum.woff") format("woff");
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "IranYekanFaNum";
+  src: url("/fonts/FaNum/woff/iranyekanwebboldfanum.woff") format("woff");
+  font-weight: 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: "IranYekan";
+  src: url("/fonts/woff2/IRANYekanWebThin.woff2") format("woff2");
+  font-weight: 100;
+  font-display: swap;
+}
+@font-face {
+  font-family: "IranYekan";
+  src: url("/fonts/woff2/IRANYekanWebLight.woff2") format("woff2");
+  font-weight: 300;
+  font-display: swap;
+}
+@font-face {
+  font-family: "IranYekan";
+  src: url("/fonts/woff2/IRANYekanWebRegular.woff2") format("woff2");
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "IranYekan";
+  src: url("/fonts/woff2/IRANYekanWebMedium.woff2") format("woff2");
+  font-weight: 500;
+  font-display: swap;
+}
+@font-face {
+  font-family: "IranYekan";
+  src: url("/fonts/woff2/IRANYekanWebBold.woff2") format("woff2");
+  font-weight: 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: "IranYekan";
+  src: url("/fonts/woff2/IRANYekanWebExtraBold.woff2") format("woff2");
+  font-weight: 800;
+  font-display: swap;
+}
+@font-face {
+  font-family: "IranYekan";
+  src: url("/fonts/woff2/IRANYekanWebBlack.woff2") format("woff2");
+  font-weight: 900;
+  font-display: swap;
+}
+
+/* Brick Red #c92c3c · Old Brick #8c1d22 · Buccaneer #5b2929 · Cape Cod #3c3d3e · Shark #1e1f20 */
+
+html.dark,
+:root {
+  color-scheme: dark;
+  --paper: #1e1f20;
+  --paper-2: #2a2b2c;
+  --ink: #f0e6e6;
+  --muted: #9a8f90;
+  --line: #3c3d3e;
+  --accent: #c92c3c;
+  --accent-2: #8c1d22;
+  --accent-ink: #f7ecec;
+  --spy: #c92c3c;
+  --citizen: #5c6b4a;
+  --gold: #c92c3c;
+  --glow: rgba(201, 44, 60, 0.28);
+  --wash-1: rgba(201, 44, 60, 0.14);
+  --wash-2: rgba(91, 41, 41, 0.35);
+}
+
+html.light {
+  color-scheme: light;
+  --paper: #f6ecec;
+  --paper-2: #fff8f8;
+  --ink: #1e1f20;
+  --muted: #5b2929;
+  --line: #e4d0d0;
+  --accent: #c92c3c;
+  --accent-2: #8c1d22;
+  --accent-ink: #fff8f8;
+  --spy: #8c1d22;
+  --citizen: #4e5c3d;
+  --gold: #8c1d22;
+  --glow: rgba(201, 44, 60, 0.2);
+  --wash-1: rgba(201, 44, 60, 0.08);
+  --wash-2: rgba(91, 41, 41, 0.06);
+}
+
+@theme {
+  --font-sans: "IranYekan", sans-serif;
+  --font-num: "IranYekanFaNum", sans-serif;
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-paper: var(--paper);
+  --color-paper-2: var(--paper-2);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
+  --color-accent-2: var(--accent-2);
+  --color-accent-ink: var(--accent-ink);
+  --color-spy: var(--spy);
+  --color-citizen: var(--citizen);
+  --color-gold: var(--gold);
+}
+
+html {
+  background: var(--paper);
+}
+body {
+  margin: 0;
+  color: var(--ink);
+  font-family: var(--font-sans);
+  background:
+    radial-gradient(900px 420px at 8% -8%, var(--wash-1), transparent 55%),
+    radial-gradient(700px 380px at 110% 0%, var(--wash-2), transparent 50%),
+    var(--paper);
+  min-height: 100dvh;
+}
+.fa-num {
+  font-family: var(--font-num);
+}
+
+@keyframes spy-fade {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes spy-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+@keyframes spy-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.spy-enter {
+  animation: spy-fade 0.45s ease both;
+}
+.spy-pulse {
+  animation: spy-pulse 2.8s ease-in-out infinite;
+}
+
+button, a {
+  transition: transform 0.15s ease, background-color 0.15s ease, opacity 0.15s ease, box-shadow 0.15s ease;
+}
+button:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+button:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spy-enter, .spy-pulse { animation: none; }
+  button, a { transition: none; }
+}

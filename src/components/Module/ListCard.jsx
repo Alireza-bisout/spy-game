@@ -1,0 +1,41 @@
+"use client";
+
+import { useSound } from "@/lib/SoundContext";
+
+export default function ListCard({ children, className = "" }) {
+  return (
+    <div className={`overflow-hidden rounded-3xl border border-line bg-paper-2 shadow-sm ${className}`}>
+      {children}
+    </div>
+  );
+}
+
+export function ListRow({ icon, title, subtitle, trailing, onClick, last }) {
+  const { play } = useSound();
+  const Comp = onClick ? "button" : "div";
+  return (
+    <Comp
+      type={onClick ? "button" : undefined}
+      onClick={
+        onClick
+          ? () => {
+              play("tap");
+              onClick();
+            }
+          : undefined
+      }
+      className={`flex w-full items-center gap-3 px-4 py-3.5 text-right ${onClick ? "hover:bg-paper active:scale-[0.99]" : ""} ${last ? "" : "border-b border-line"}`}
+    >
+      {icon && (
+        <span className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-paper text-accent">
+          {icon}
+        </span>
+      )}
+      <span className="min-w-0 flex-1">
+        <span className="block font-semibold">{title}</span>
+        {subtitle && <span className="mt-0.5 block text-xs text-muted">{subtitle}</span>}
+      </span>
+      {trailing}
+    </Comp>
+  );
+}

@@ -1,0 +1,16 @@
+نسخه ۱ جاسوس — Overlay روی پروژهٔ خودتان
+
+۱) محتوای این zip را روی پروژهٔ spy-game کپی کنید.
+۲) فایل src/app/globals.css خودتان را نگه دارید (این بسته آن را ندارد).
+۳) public/fonts (ایران‌یکان + Font Awesome) را دست نزنید.
+۴) layout فونت‌آوسام را از /fonts/css/all.min.css می‌گیرد.
+   اگر فایل شما all.css است، در layout همان را بگذارید.
+۵) package.json شما (next 15.5.0 بدون eslint-config-next) کافی است.
+۶) npm install && npm run dev
+
+ساختار:
+src/app            فقط مسیرها
+src/components/Template  صفحات کامل
+src/components/Module    دکمه‌ها، چیپ، شیت، کارت نقش
+src/lib            GameContext
+src/data           JSON کلمات

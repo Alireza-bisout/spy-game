@@ -1,0 +1,13 @@
+خروجی استاتیک برای APK (Capacitor)
+
+1) این overlay را روی پروژه بریزید.
+2) در package.json اسکریپت build همان next build بماند.
+3) npm run build  → پوشه out/
+4) npm i @capacitor/core @capacitor/cli @capacitor/android
+5) npx cap init "جاسوس" com.example.spy --web-dir out
+6) npx cap add android
+7) npx cap sync
+8) npx cap open android
+9) در Android Studio: Build → Build APK
+
+تم دیگر از cookies سرور استفاده نمی‌کند؛ فقط localStorage.

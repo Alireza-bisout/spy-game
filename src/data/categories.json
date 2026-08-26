@@ -1,0 +1,16 @@
+[
+  { "id": "objects", "fa": "اشیاء" },
+  { "id": "animals", "fa": "جانوران" },
+  { "id": "celebs", "fa": "مشاهیر" },
+  { "id": "tech", "fa": "تکنولوژی و علمی" },
+  { "id": "football", "fa": "فوتبال" },
+  { "id": "places", "fa": "مکان‌ها و گردشگری" },
+  { "id": "food", "fa": "غذا" },
+  { "id": "snacks", "fa": "خوراکی" },
+  { "id": "jobs", "fa": "شغل" },
+  { "id": "series", "fa": "فیلم و سریال" },
+  { "id": "history", "fa": "تاریخ" },
+  { "id": "cartoons", "fa": "کارتون" },
+  { "id": "books", "fa": "کتاب" },
+  { "id": "proverbs", "fa": "ضرب‌المثل" }
+]
