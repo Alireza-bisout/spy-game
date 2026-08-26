@@ -10,17 +10,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+      - uses: oven-sh/setup-bun@v2
         with:
-          node-version: "22"
+          bun-version: "1.2.19"
 
       - name: Install JS deps
-        run: |
-          npm install -g npm@11.5.2
-          npm install --no-audit --no-fund --legacy-peer-deps
+        run: bun install --frozen-lockfile=false
 
       - name: Next export
-        run: npx next build
+        run: bunx next build
 
       - uses: actions/setup-java@v4
         with:
@@ -31,14 +29,15 @@ jobs:
 
       - name: Capacitor Android
         run: |
-          npm install --no-audit --no-fund --legacy-peer-deps @capacitor/core @capacitor/cli @capacitor/android
+          bun add -d @capacitor/cli
+          bun add @capacitor/core @capacitor/android
           if [ ! -f capacitor.config.json ] && [ ! -f capacitor.config.ts ]; then
-            npx cap init "Spy" com.example.spy --web-dir out
+            bunx cap init "Spy" com.example.spy --web-dir out
           fi
           if [ ! -d android ]; then
-            npx cap add android
+            bunx cap add android
           fi
-          npx cap sync android
+          bunx cap sync android
 
       - name: Gradle APK
         working-directory: android
