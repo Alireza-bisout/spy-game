@@ -15,7 +15,7 @@ jobs:
           bun-version: "1.2.19"
 
       - name: Install JS deps
-        run: bun install --frozen-lockfile=false
+        run: bun install
 
       - name: Next export
         run: bunx next build
