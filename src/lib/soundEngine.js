@@ -75,6 +75,30 @@ export function unlockAudio() {
   return audio();
 }
 
+/** ملودی کوتاه ورود. مدت تقریبی به میلی‌ثانیه برمی‌گردد. */
+export function playIntroMelody() {
+  const c = audio();
+  if (!c) return 2200;
+  const t = c.currentTime;
+  const dest = c.destination;
+  const notes = [
+    { f: 220, at: 0, dur: 0.28 },
+    { f: 261.63, at: 0.22, dur: 0.26 },
+    { f: 329.63, at: 0.44, dur: 0.26 },
+    { f: 392, at: 0.68, dur: 0.32 },
+    { f: 329.63, at: 1.02, dur: 0.22 },
+    { f: 440, at: 1.24, dur: 0.42 },
+    { f: 523.25, at: 1.68, dur: 0.5 },
+  ];
+  notes.forEach((n) => {
+    tone(c, dest, { type: "triangle", freq: n.f, t: t + n.at, peak: 0.09, attack: 0.02, release: n.dur });
+    tone(c, dest, { type: "sine", freq: n.f / 2, t: t + n.at, peak: 0.05, attack: 0.03, release: n.dur + 0.08 });
+  });
+  kick(c, dest, t);
+  kick(c, dest, t + 1.24);
+  return 2300;
+}
+
 export function playSfx(name, opts = {}) {
   const c = audio();
   if (!c) return;
@@ -95,10 +119,7 @@ export function playSfx(name, opts = {}) {
     [0, 0.15, 0.3].forEach((off) => tone(c, dest, { type: "sawtooth", freq: 340, freqTo: 180, t: t + off, peak: 0.11, attack: 0.01, release: 0.12 }));
   }
   if (name === "reveal") tone(c, dest, { type: "sine", freq: 196, freqTo: 392, t, peak: 0.09, attack: 0.05, release: 0.4 });
-  if (name === "intro") {
-    kick(c, dest, t);
-    [220, 261, 329, 440].forEach((f, i) => tone(c, dest, { type: "triangle", freq: f, t: t + 0.12 * i, peak: 0.08, attack: 0.02, release: 0.28 }));
-  }
+  if (name === "intro") playIntroMelody();
   if (name === "win") [523, 659, 784].forEach((f, i) => tone(c, dest, { type: "triangle", freq: f, t: t + i * 0.11, peak: 0.08, attack: 0.02, release: 0.28 }));
   if (name === "lose") tone(c, dest, { type: "triangle", freq: 311, freqTo: 98, t, peak: 0.1, attack: 0.04, release: 0.5 });
 }

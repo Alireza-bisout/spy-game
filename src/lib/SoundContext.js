@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { haptic, playSfx, startMusic, stopMusic, unlockAudio } from "./soundEngine";
+import { haptic, playIntroMelody, playSfx, startMusic, stopMusic, unlockAudio } from "./soundEngine";
 
 const KEY = "spy-audio";
 const Ctx = createContext(null);
@@ -39,10 +39,17 @@ export function SoundProvider({ children }) {
   const boot = useCallback(() => {
     unlockAudio();
     const raw = JSON.parse(localStorage.getItem(KEY) || "{}");
-    if (raw.music !== false) startMusic();
-    if (raw.sfx !== false) playSfx("intro");
-    setUnlocked(true);
+    let wait = 2200;
+    if (raw.sfx !== false) wait = playIntroMelody() || 2200;
+    if (raw.music !== false) {
+      window.setTimeout(() => startMusic(), Math.min(400, wait));
+    }
+    window.setTimeout(() => setUnlocked(true), wait);
   }, []);
+
+  useEffect(() => {
+    boot();
+  }, [boot]);
 
   const api = useMemo(
     () => ({
@@ -69,16 +76,12 @@ export function SoundProvider({ children }) {
     <Ctx.Provider value={api}>
       {children}
       {!unlocked && (
-        <button
-          type="button"
-          onClick={boot}
-          className="fixed inset-0 z-[80] flex flex-col items-center justify-center gap-5 bg-paper text-ink"
-        >
-          <span className="spy-pulse grid h-24 w-24 place-items-center rounded-[1.8rem] bg-[#c92c3c] text-white shadow-[0_16px_40px_rgba(201,44,60,0.35)]">
-            <i className="fa-solid fa-user-secret text-4xl" />
+        <div className="fixed inset-0 z-[80] flex flex-col items-center justify-center gap-5 bg-paper text-ink">
+          <span className="spy-pulse overflow-hidden rounded-[1.8rem] shadow-[0_16px_40px_rgba(201,44,60,0.35)]">
+            <img src="/logo.png" alt="" width={96} height={96} className="h-24 w-24 object-cover" draggable={false} />
           </span>
           <span className="spy-enter text-3xl font-extrabold tracking-wide">جاسوس</span>
-        </button>
+        </div>
       )}
     </Ctx.Provider>
   );

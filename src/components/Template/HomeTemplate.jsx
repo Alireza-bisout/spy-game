@@ -27,8 +27,8 @@ export default function HomeTemplate() {
         </button>
       </div>
       <header className="pb-6 pt-4 text-center">
-        <div className="mx-auto mb-5 grid h-[4.5rem] w-[4.5rem] place-items-center rounded-[1.6rem] bg-accent text-accent-ink shadow-[0_12px_30px_var(--glow)]">
-          <i className="fa-solid fa-user-secret text-3xl" />
+        <div className="mx-auto mb-5 h-[4.5rem] w-[4.5rem] overflow-hidden rounded-[1.6rem] shadow-[0_12px_30px_var(--glow)]">
+          <img src="/logo.png" alt="" width={72} height={72} className="h-full w-full object-cover" draggable={false} />
         </div>
         <p className="text-xs font-semibold tracking-[0.35em] text-accent">SPY</p>
         <h1 className="mt-1 text-[2.4rem] font-extrabold">جاسوس</h1>

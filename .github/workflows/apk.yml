@@ -32,7 +32,7 @@ jobs:
       - name: Capacitor Android
         run: |
           bun add -d @capacitor/cli
-          bun add @capacitor/core @capacitor/android
+          bun add @capacitor/core @capacitor/android @capacitor/app
           if [ ! -f capacitor.config.json ] && [ ! -f capacitor.config.ts ]; then
             bunx cap init "Spy" com.example.spy --web-dir out
           fi
