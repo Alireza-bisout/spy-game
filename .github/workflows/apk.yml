@@ -39,13 +39,40 @@ jobs:
           if [ ! -d android ]; then
             bunx cap add android
           fi
+          pip install pillow -q
+          python3 scripts/make-android-icons.py
+          python3 scripts/apply-android-brand.py
           bunx cap sync android
 
-      - name: Gradle APK
+      - name: Decode keystore
+        if: ${{ secrets.ANDROID_KEYSTORE_BASE64 != '' }}
+        env:
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+        run: echo "$ANDROID_KEYSTORE_BASE64" | base64 -d > android/app/spy-release.jks
+
+      - name: Gradle signed release
+        if: ${{ secrets.ANDROID_KEYSTORE_BASE64 != '' }}
+        working-directory: android
+        env:
+          ANDROID_KEYSTORE_PATH: ${{ github.workspace }}/android/app/spy-release.jks
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: chmod +x gradlew && ./gradlew assembleRelease --no-daemon
+
+      - name: Gradle debug (بدون کلید)
+        if: ${{ secrets.ANDROID_KEYSTORE_BASE64 == '' }}
         working-directory: android
         run: chmod +x gradlew && ./gradlew assembleDebug --no-daemon
 
       - uses: actions/upload-artifact@v4
+        if: ${{ secrets.ANDROID_KEYSTORE_BASE64 != '' }}
+        with:
+          name: spy-apk
+          path: android/app/build/outputs/apk/release/app-release.apk
+
+      - uses: actions/upload-artifact@v4
+        if: ${{ secrets.ANDROID_KEYSTORE_BASE64 == '' }}
         with:
           name: spy-apk
           path: android/app/build/outputs/apk/debug/app-debug.apk

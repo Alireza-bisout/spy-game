@@ -1,0 +1,25 @@
+امضای ثابت APK (release) — یک‌بار برای همیشه
+
+۱) در GitHub: Actions → make-keystore → Run workflow
+   - store_password و key_password را خودت بگذار (فراموش نکن)
+   - alias را همان spy بگذار
+
+۲) بعد از سبز شدن:
+   Artifacts → spy-release-keystore → فایل spy-release.jks را دانلود کن
+   این فایل را مثل رمز بانکی نگه دار. اگر گم شود دیگر نمی‌توانی آپدیت همان اپ را با همان امضا بدهی.
+
+۳) تبدیل به base64 روی ویندوز (PowerShell):
+   [Convert]::ToBase64String([IO.File]::ReadAllBytes("C:\path\spy-release.jks"))
+   خروجی یک خط طولانی است؛ کپی کن.
+
+۴) GitHub → Settings مخزن → Secrets and variables → Actions → New repository secret
+   ANDROID_KEYSTORE_BASE64   = همان متن base64
+   ANDROID_KEYSTORE_PASSWORD = رمز فایل
+   ANDROID_KEY_ALIAS         = spy
+   ANDROID_KEY_PASSWORD      = رمز کلید
+
+۵) Actions → apk → Run workflow
+   خروجی دیگر app-release.apk است نه app-debug.
+
+نکته: انتشار در مایکت هشدار Play Protect را لزوماً حذف نمی‌کند؛ امضای ثابت برای آپدیت‌های بعدی لازم است.
+make-keystore را فقط یک‌بار اجرا کن.

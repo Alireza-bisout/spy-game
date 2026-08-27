@@ -34,7 +34,7 @@ export default function RolesTemplate() {
               icon={<i className={`fa-solid ${p.icon || "fa-user"}`} />}
               title={p.name}
               subtitle="بزن تا صفحهٔ خودت باز شود"
-              onClick={() => router.push("/play/roles/reveal?id=" + p.id)}
+              onClick={() => router.replace("/play/roles/reveal?id=" + p.id)}
               trailing={<i className="fa-solid fa-chevron-left text-xs text-muted" />}
             />
           ))}
@@ -50,7 +50,7 @@ export default function RolesTemplate() {
           disabled={remaining.length > 0}
           onClick={() => {
             startTable();
-            router.push("/play/table");
+            router.replace("/play/table");
           }}
         >
           شروع میز

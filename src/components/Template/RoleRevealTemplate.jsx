@@ -22,7 +22,7 @@ export default function RoleRevealTemplate({ playerId }) {
     return (
       <div className="flex flex-col gap-3 pt-10">
         <p>این بازیکن پیدا نشد.</p>
-        <Button onClick={() => router.push("/play/roles")}>بازگشت</Button>
+        <Button onClick={() => router.replace("/play/roles")}>بازگشت</Button>
       </div>
     );
   }
@@ -101,7 +101,7 @@ export default function RoleRevealTemplate({ playerId }) {
           دیدم
         </Button>
       ) : (
-        <Button variant="ghost" onClick={() => router.push("/play/roles")}>
+        <Button variant="ghost" onClick={() => router.replace("/play/roles")}>
           انصراف
         </Button>
       )}

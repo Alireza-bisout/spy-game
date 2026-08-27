@@ -1,5 +1,8 @@
 {
   "appId": "com.example.spy",
-  "appName": "Spy",
-  "webDir": "out"
+  "appName": "جاسوس",
+  "webDir": "out",
+  "android": {
+    "allowMixedContent": true
+  }
 }
