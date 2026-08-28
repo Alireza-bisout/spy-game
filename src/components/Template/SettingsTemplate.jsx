@@ -41,6 +41,7 @@ export default function SettingsTemplate() {
           trailing={<Toggle on={vibrate} onChange={() => setVibrate(!vibrate)} />}
         />
       </ListCard>
+      <p className="mt-6 text-center text-xs text-muted">ساختهٔ Azhdar Game</p>
       <div className="mt-auto pt-6">
         <Button onClick={() => router.push("/")}>خانه</Button>
       </div>

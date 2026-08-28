@@ -7,6 +7,13 @@ export function shuffle(arr) {
   return a;
 }
 
+/** حداقل ۲ غیرجاسوس؛ از ۵ نفر به بعد حداکثر ۲ جاسوس. */
+export function maxSpies(playerCount) {
+  const n = playerCount || 0;
+  if (n < 5) return 1;
+  return Math.min(2, n - 2);
+}
+
 export function pickWord(words, categoryIds, history = []) {
   const pool = words.filter((w) => categoryIds.includes(w.category) && !history.includes(w.id));
   const src = pool.length ? pool : words.filter((w) => categoryIds.includes(w.category));

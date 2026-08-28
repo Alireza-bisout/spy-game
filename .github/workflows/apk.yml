@@ -39,7 +39,7 @@ jobs:
           bun add -d @capacitor/cli
           bun add @capacitor/core @capacitor/android @capacitor/app
           if [ ! -f capacitor.config.json ] && [ ! -f capacitor.config.ts ]; then
-            bunx cap init "Spy" com.example.spy --web-dir out
+            bunx cap init "جاسوس" ir.azhdargame.spy --web-dir out
           fi
           if [ ! -d android ]; then
             bunx cap add android

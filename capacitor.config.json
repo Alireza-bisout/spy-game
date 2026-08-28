@@ -1,8 +1,9 @@
 {
-  "appId": "com.example.spy",
+  "appId": "ir.azhdargame.spy",
   "appName": "جاسوس",
   "webDir": "out",
   "android": {
     "allowMixedContent": true
   }
 }
+

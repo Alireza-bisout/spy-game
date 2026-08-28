@@ -6,7 +6,7 @@ import BackGuard from "@/components/Module/BackGuard";
 
 export const metadata = {
   title: "جاسوس",
-  description: "بازی جاسوس — یک گوشی، چند بازیکن",
+  description: "بازی جاسوس از Azhdar Game",
   icons: { icon: "/logo.png", apple: "/logo.png" },
 };
 

@@ -3,7 +3,7 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import categories from "@/data/categories.json";
 import words from "@/data/words.json";
-import { pickWord, shuffle } from "./gameUtils";
+import { maxSpies, pickWord, shuffle } from "./gameUtils";
 
 const STORAGE = "spy-game-v1";
 
@@ -31,6 +31,8 @@ const defaultState = {
   winner: null,
   question: null,
   historyWords: [],
+  exiled: {},
+  lastExile: null,
 };
 
 const Ctx = createContext(null);
@@ -38,7 +40,7 @@ const Ctx = createContext(null);
 function deal(s) {
   const word = pickWord(words, s.enabledCategories, s.historyWords);
   const n = s.players.length;
-  const spyCount = Math.min(s.spyCount, Math.max(1, n - 1));
+  const spyCount = Math.min(Math.max(1, s.spyCount), maxSpies(n));
   const order = shuffle(s.players.map((_, i) => i));
   const roles = {};
   order.forEach((idx, i) => {
@@ -61,6 +63,8 @@ function deal(s) {
     phase: "roles",
     winner: null,
     question: null,
+    exiled: {},
+    lastExile: null,
   };
 }
 
@@ -110,12 +114,18 @@ export function GameProvider({ children }) {
           const log = opts.burned
             ? [...s.log, { type: "burn", playerId: pid }]
             : [...s.log, { type: "clue", playerId: pid }];
-          let turnIndex = s.turnIndex + 1;
+          const n = s.players.length;
+          let turnIndex = s.turnIndex;
           let round = s.round;
-          if (turnIndex >= s.players.length) {
-            turnIndex = 0;
-            round += 1;
-          }
+          let guard = 0;
+          do {
+            turnIndex += 1;
+            if (turnIndex >= n) {
+              turnIndex = 0;
+              round += 1;
+            }
+            guard += 1;
+          } while (s.exiled?.[s.players[turnIndex]?.id] && guard <= n + 1);
           return { ...s, turnIndex, round, log };
         }),
       addSuspicion: (id) =>
@@ -142,14 +152,29 @@ export function GameProvider({ children }) {
         }),
       exile: (id) =>
         setState((s) => {
+          if (s.exiled?.[id]) return s;
           const role = s.roles[id];
-          return {
-            ...s,
-            phase: "result",
-            winner: role === "spy" ? "citizens" : "spy",
-            log: [...s.log, { type: "exile", id, role }],
-            historyWords: s.word ? [...s.historyWords, s.word.id].slice(-20) : s.historyWords,
-          };
+          const exiled = { ...(s.exiled || {}), [id]: role };
+          const log = [...s.log, { type: "exile", id, role }];
+          const hist = s.word ? [...s.historyWords, s.word.id].slice(-20) : s.historyWords;
+          const spiesLeft = s.players.filter((p) => !exiled[p.id] && s.roles[p.id] === "spy").length;
+          const citizensExiled = Object.values(exiled).filter((r) => r !== "spy").length;
+          if (spiesLeft === 0) {
+            return { ...s, exiled, log, lastExile: { id, role }, phase: "result", winner: "citizens", historyWords: hist };
+          }
+          if (citizensExiled >= 2) {
+            return { ...s, exiled, log, lastExile: { id, role }, phase: "result", winner: "spy", historyWords: hist };
+          }
+          const n = s.players.length;
+          let turnIndex = s.turnIndex;
+          if (s.players[turnIndex]?.id === id || exiled[s.players[turnIndex]?.id]) {
+            let guard = 0;
+            do {
+              turnIndex = (turnIndex + 1) % n;
+              guard += 1;
+            } while (exiled[s.players[turnIndex]?.id] && guard <= n);
+          }
+          return { ...s, exiled, log, lastExile: { id, role }, turnIndex };
         }),
       samePlayersAgain: () => setState(deal),
       resetToHome: () => patch({ phase: "home", winner: null }),

@@ -57,6 +57,21 @@ def patch_strings():
     print("strings patched")
 
 
+APP_ID = "ir.azhdargame.spy"
+
+
+def patch_application_id():
+    p = REPO / "android" / "app" / "build.gradle"
+    if not p.exists():
+        return
+    t = p.read_text(encoding="utf-8")
+    t2 = re.sub(r'applicationId\s+"[^"]+"', f'applicationId "{APP_ID}"', t)
+    t2 = re.sub(r'namespace\s+"[^"]+"', f'namespace "{APP_ID}"', t2)
+    if t2 != t:
+        p.write_text(t2, encoding="utf-8")
+        print("applicationId", APP_ID)
+
+
 def patch_gradle():
     p = REPO / "android" / "app" / "build.gradle"
     if not p.exists():
@@ -100,4 +115,5 @@ if __name__ == "__main__":
     copy_icons()
     patch_manifest()
     patch_strings()
+    patch_application_id()
     patch_gradle()

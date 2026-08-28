@@ -86,7 +86,8 @@ export default function RoleRevealTemplate({ playerId }) {
           ) : (
             <>
               <p className={`text-sm font-semibold ${spy ? "text-spy" : "text-citizen"}`}>{title}</p>
-              <p className="mt-4 text-4xl font-extrabold leading-snug">{word}</p>
+              {!spy && catName && <p className="mt-3 text-sm text-muted">دسته: {catName}</p>}
+              <p className="mt-2 text-4xl font-extrabold leading-snug">{word}</p>
             </>
           )}
         </button>

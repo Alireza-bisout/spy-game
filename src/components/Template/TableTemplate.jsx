@@ -16,16 +16,19 @@ export default function TableTemplate() {
   const [guessOpen, setGuessOpen] = useState(false);
   const [qOpen, setQOpen] = useState(false);
   const [qStep, setQStep] = useState(1);
-  const [voteOpen, setVoteOpen] = useState(false);
+  const [votePhase, setVotePhase] = useState(null);
+  const [announce, setAnnounce] = useState(null);
   const [q, setQ] = useState({ asker: "", target: "", a: "", b: "" });
   const [filter, setFilter] = useState("");
   const burned = useRef(false);
   const skippedTick = useRef(true);
 
+  const exiled = state.exiled || {};
+  const alive = state.players.filter((p) => !exiled[p.id]);
   const current = state.players[state.turnIndex];
   const pool = words.filter((w) => state.enabledCategories.includes(w.category));
   const questionPhase = state.round > state.roundsBeforeQuestion;
-  const hot = state.players.filter((p) => (state.suspicion[p.id] || 0) >= 3);
+  const hot = alive.filter((p) => (state.suspicion[p.id] || 0) >= 3);
   const near = state.word?.near || [];
 
   useEffect(() => {
@@ -37,8 +40,8 @@ export default function TableTemplate() {
   }, [state.turnIndex, state.round, state.turnSeconds]);
 
   useEffect(() => {
-    if (state.phase === "result") router.push("/play/result");
-  }, [state.phase, router]);
+    if (state.phase === "result" && votePhase !== "announce") router.push("/play/result");
+  }, [state.phase, votePhase, router]);
 
   useEffect(() => {
     if (left === 0 && !burned.current && current) {
@@ -63,10 +66,25 @@ export default function TableTemplate() {
     );
   }
 
+  function confirmExile(id) {
+    const p = state.players.find((x) => x.id === id);
+    const role = state.roles[id];
+    setAnnounce({ name: p?.name || "بازیکن", role });
+    setVotePhase("announce");
+    play("reveal");
+    exile(id);
+  }
+
+  function closeAnnounce() {
+    setVotePhase(null);
+    setAnnounce(null);
+    if (state.phase === "result") router.push("/play/result");
+  }
+
   function openQuestion() {
     setQ({
       asker: current.id,
-      target: state.players.find((p) => p.id !== current.id)?.id || "",
+      target: alive.find((p) => p.id !== current.id)?.id || "",
       a: near[0] || "",
       b: near[1] || "",
     });
@@ -107,15 +125,16 @@ export default function TableTemplate() {
       )}
 
       <ListCard>
-        {state.players.map((p, i) => {
+        {alive.map((p, i) => {
           const sus = state.suspicion[p.id] || 0;
+          const idx = state.players.findIndex((x) => x.id === p.id);
           return (
             <ListRow
               key={p.id}
-              last={i === state.players.length - 1}
+              last={i === alive.length - 1}
               icon={<i className={`fa-solid ${p.icon || "fa-user"}`} />}
               title={p.name}
-              subtitle={i === state.turnIndex ? "در حال اشاره" : sus >= 3 ? "سوءظن بالا" : "منتظر"}
+              subtitle={idx === state.turnIndex ? "در حال اشاره" : sus >= 3 ? "سوءظن بالا" : "منتظر"}
               trailing={
                 <button
                   type="button"
@@ -136,7 +155,7 @@ export default function TableTemplate() {
         <button
           type="button"
           className="text-sm font-semibold text-spy"
-          onClick={() => setVoteOpen(true)}
+          onClick={() => setVotePhase("pick")}
         >
           پیشنهاد اخراج: {hot.map((p) => p.name).join("، ")}
         </button>
@@ -167,7 +186,7 @@ export default function TableTemplate() {
           <Button variant="ghost" className="px-2 text-sm" onClick={openQuestion}>
             سوال
           </Button>
-          <Button variant="ghost" className="px-2 text-sm" onClick={() => setVoteOpen(true)}>
+          <Button variant="ghost" className="px-2 text-sm" onClick={() => setVotePhase("pick")}>
             اخراج
           </Button>
           <Button variant="danger" className="px-2 text-sm" onClick={() => setGuessOpen(true)}>
@@ -205,7 +224,7 @@ export default function TableTemplate() {
           <>
             <p className="text-xs text-muted">پرسنده</p>
             <div className="flex flex-wrap gap-2">
-              {state.players.map((p) => (
+              {alive.map((p) => (
                 <button
                   key={p.id}
                   type="button"
@@ -218,7 +237,7 @@ export default function TableTemplate() {
             </div>
             <p className="text-xs text-muted">متهم</p>
             <div className="flex flex-wrap gap-2">
-              {state.players.map((p) => (
+              {alive.map((p) => (
                 <button
                   key={p.id}
                   type="button"
@@ -280,14 +299,33 @@ export default function TableTemplate() {
         )}
       </Sheet>
 
-      <Sheet open={voteOpen} onClose={() => setVoteOpen(false)} title="اخراج با اجماع">
-        <p className="text-sm text-muted">اگر اکثریت موافق‌اند، همان نفر را بزنید. نقش همان لحظه معلوم می‌شود.</p>
-        {state.players.map((p) => (
-          <Button key={p.id} variant="danger" onClick={() => exile(p.id)}>
+      <Sheet open={votePhase === "pick"} onClose={() => setVotePhase(null)} title="چه کسی اخراج شود؟">
+        <p className="text-sm text-muted">اسم را بزن. بعد نقشش جدا اعلام می‌شود.</p>
+        {alive.map((p) => (
+          <Button key={p.id} variant="danger" onClick={() => confirmExile(p.id)}>
             <i className={`fa-solid ${p.icon || "fa-user"} ml-1`} /> {p.name}
             {(state.suspicion[p.id] || 0) >= 3 ? " · سوءظن بالا" : ""}
           </Button>
         ))}
+      </Sheet>
+
+      <Sheet open={votePhase === "announce"} onClose={closeAnnounce} title="نتیجه اخراج">
+        {announce && (
+          <>
+            <p className="text-center text-sm text-muted">از میز خارج شد</p>
+            <p className="mt-1 text-center text-3xl font-extrabold">{announce.name}</p>
+            <p
+              className={`mt-4 text-center text-2xl font-extrabold ${
+                announce.role === "spy" ? "text-spy" : "text-citizen"
+              }`}
+            >
+              {announce.role === "spy" ? "جاسوس بود" : announce.role === "blank" ? "سفید بود" : "شهروند بود"}
+            </p>
+            <Button className="mt-4" onClick={closeAnnounce}>
+              {state.phase === "result" ? "دیدن نتیجه دست" : "ادامه بازی"}
+            </Button>
+          </>
+        )}
       </Sheet>
     </div>
   );
