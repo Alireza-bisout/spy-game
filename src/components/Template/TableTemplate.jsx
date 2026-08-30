@@ -9,7 +9,7 @@ import ListCard, { ListRow } from "@/components/Module/ListCard";
 import Sheet from "@/components/Module/Sheet";
 
 export default function TableTemplate() {
-  const { state, words, categories, nextTurn, addSuspicion, exile, guess, setQuestion } = useGame();
+  const { state, words, categories, nextTurn, addSuspicion, exile, guess, setQuestion, patch } = useGame();
   const router = useRouter();
   const { play } = useSound();
   const [left, setLeft] = useState(state.turnSeconds);
@@ -20,6 +20,7 @@ export default function TableTemplate() {
   const [announce, setAnnounce] = useState(null);
   const [q, setQ] = useState({ asker: "", target: "", a: "", b: "" });
   const [filter, setFilter] = useState("");
+  const [kickId, setKickId] = useState(null);
   const burned = useRef(false);
   const skippedTick = useRef(true);
 
@@ -30,6 +31,10 @@ export default function TableTemplate() {
   const questionPhase = state.round > state.roundsBeforeQuestion;
   const hot = alive.filter((p) => (state.suspicion[p.id] || 0) >= 3);
   const near = state.word?.near || [];
+  const spyTotal = Object.values(state.roles || {}).filter((r) => r === "spy").length;
+  const spiesGone = Object.values(exiled).filter((r) => r === "spy").length;
+  const heartsLeft = Math.max(0, spyTotal - (state.spyMisses || 0) - spiesGone);
+  const kickPlayer = state.players.find((p) => p.id === kickId);
 
   useEffect(() => {
     burned.current = false;
@@ -78,7 +83,24 @@ export default function TableTemplate() {
   function closeAnnounce() {
     setVotePhase(null);
     setAnnounce(null);
+    patch({ lastGuess: null });
     if (state.phase === "result") router.push("/play/result");
+  }
+
+  function openGuess() {
+    setFilter("");
+    setGuessOpen(true);
+  }
+
+  function submitGuess(wordId) {
+    const ok = state.word && state.word.id === wordId;
+    setGuessOpen(false);
+    if (!ok) {
+      setAnnounce({ guessFail: true });
+      setVotePhase("announce");
+      play("lose");
+    }
+    guess(wordId);
   }
 
   function openQuestion() {
@@ -117,6 +139,17 @@ export default function TableTemplate() {
           </p>
         </div>
       </div>
+
+      {spyTotal > 0 && (
+        <div className="flex items-center justify-center gap-2 rounded-2xl border border-line bg-paper-2 px-3 py-2">
+          <span className="text-xs text-muted">جان جاسوس</span>
+          <span className="flex gap-1.5 text-spy">
+            {Array.from({ length: spyTotal }).map((_, i) => (
+              <i key={i} className={`fa-${i < heartsLeft ? "solid" : "regular"} fa-heart`} />
+            ))}
+          </span>
+        </div>
+      )}
 
       {questionPhase && (
         <div className="rounded-2xl border border-accent/40 bg-paper-2 px-4 py-3 text-sm">
@@ -189,14 +222,14 @@ export default function TableTemplate() {
           <Button variant="ghost" className="px-2 text-sm" onClick={() => setVotePhase("pick")}>
             اخراج
           </Button>
-          <Button variant="danger" className="px-2 text-sm" onClick={() => setGuessOpen(true)}>
+          <Button variant="danger" className="px-2 text-sm" onClick={openGuess}>
             حدس
           </Button>
         </div>
       </div>
 
       <Sheet open={guessOpen} onClose={() => setGuessOpen(false)} title="حدس جاسوس">
-        <p className="text-sm text-muted">گوشی را به جاسوس بدهید. حدس اشتباه بازی را به شهروندان می‌دهد.</p>
+        <p className="text-sm text-muted">کلمه را انتخاب کن.</p>
         <input
           className="rounded-2xl border border-line bg-paper px-3 py-3"
           value={filter}
@@ -207,7 +240,7 @@ export default function TableTemplate() {
           {pool
             .filter((w) => w.fa.includes(filter))
             .map((w) => (
-              <Button key={w.id} variant="ghost" onClick={() => guess(w.id)}>
+              <Button key={w.id} variant="ghost" onClick={() => submitGuess(w.id)}>
                 {w.fa}
                 <span className="text-muted"> · {categories.find((c) => c.id === w.category)?.fa}</span>
               </Button>
@@ -299,32 +332,59 @@ export default function TableTemplate() {
         )}
       </Sheet>
 
+      <Sheet open={!!kickId} onClose={() => setKickId(null)} title="خروج از میز">
+        <p className="text-center text-sm text-muted">
+          {kickPlayer?.name} را از میز خارج می‌کنی؟
+        </p>
+        <Button
+          variant="danger"
+          onClick={() => {
+            const id = kickId;
+            setKickId(null);
+            if (id) confirmExile(id);
+          }}
+        >
+          بله، خارج شود
+        </Button>
+        <Button variant="ghost" onClick={() => setKickId(null)}>
+          نه
+        </Button>
+      </Sheet>
+
       <Sheet open={votePhase === "pick"} onClose={() => setVotePhase(null)} title="چه کسی اخراج شود؟">
-        <p className="text-sm text-muted">اسم را بزن. بعد نقشش جدا اعلام می‌شود.</p>
+        <p className="text-sm text-muted">اسم را بزن.</p>
         {alive.map((p) => (
-          <Button key={p.id} variant="danger" onClick={() => confirmExile(p.id)}>
+          <Button key={p.id} variant="danger" onClick={() => { setVotePhase(null); setKickId(p.id); }}>
             <i className={`fa-solid ${p.icon || "fa-user"} ml-1`} /> {p.name}
-            {(state.suspicion[p.id] || 0) >= 3 ? " · سوءظن بالا" : ""}
           </Button>
         ))}
       </Sheet>
 
-      <Sheet open={votePhase === "announce"} onClose={closeAnnounce} title="نتیجه اخراج">
-        {announce && (
+      <Sheet open={votePhase === "announce"} onClose={closeAnnounce} title={announce?.guessFail ? "حدس" : "نتیجه اخراج"}>
+        {announce?.guessFail ? (
           <>
-            <p className="text-center text-sm text-muted">از میز خارج شد</p>
-            <p className="mt-1 text-center text-3xl font-extrabold">{announce.name}</p>
-            <p
-              className={`mt-4 text-center text-2xl font-extrabold ${
-                announce.role === "spy" ? "text-spy" : "text-citizen"
-              }`}
-            >
-              {announce.role === "spy" ? "جاسوس بود" : announce.role === "blank" ? "سفید بود" : "شهروند بود"}
-            </p>
+            <p className="text-center text-2xl font-extrabold">اشتباه بود</p>
             <Button className="mt-4" onClick={closeAnnounce}>
-              {state.phase === "result" ? "دیدن نتیجه دست" : "ادامه بازی"}
+              ادامه
             </Button>
           </>
+        ) : (
+          announce && (
+            <>
+              <p className="text-center text-sm text-muted">از میز خارج شد</p>
+              <p className="mt-1 text-center text-3xl font-extrabold">{announce.name}</p>
+              <p
+                className={`mt-4 text-center text-2xl font-extrabold ${
+                  announce.role === "spy" ? "text-spy" : "text-citizen"
+                }`}
+              >
+                {announce.role === "spy" ? "جاسوس بود" : announce.role === "blank" ? "سفید بود" : "شهروند بود"}
+              </p>
+              <Button className="mt-4" onClick={closeAnnounce}>
+                {state.phase === "result" ? "دیدن نتیجه دست" : "ادامه بازی"}
+              </Button>
+            </>
+          )
         )}
       </Sheet>
     </div>

@@ -32,6 +32,9 @@ export default function RoleRevealTemplate({ playerId }) {
   let title = "شهروند";
   let word = state.word?.fa || "—";
   let spy = false;
+  const spyPartners = state.players.filter(
+    (p) => p.id !== player.id && state.roles[p.id] === "spy"
+  );
   if (role === "spy") {
     title = "تو جاسوسی";
     spy = true;
@@ -88,6 +91,11 @@ export default function RoleRevealTemplate({ playerId }) {
               <p className={`text-sm font-semibold ${spy ? "text-spy" : "text-citizen"}`}>{title}</p>
               {!spy && catName && <p className="mt-3 text-sm text-muted">دسته: {catName}</p>}
               <p className="mt-2 text-4xl font-extrabold leading-snug">{word}</p>
+              {role === "spy" && spyPartners.length > 0 && (
+                <p className="mt-4 text-base font-semibold text-spy">
+                  یار تو: {spyPartners.map((p) => p.name).join("، ")}
+                </p>
+              )}
             </>
           )}
         </button>

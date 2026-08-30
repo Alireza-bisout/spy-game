@@ -73,7 +73,7 @@ export default function SetupTemplate() {
           last
           icon={<i className="fa-solid fa-ghost" />}
           title="نقش سفید"
-          subtitle="هیچ کلمه‌ای نمی‌بیند"
+          subtitle="کلمه را نمی‌بیند؛ باید وانمود کند شهروند است"
           trailing={<Toggle on={state.blankOn} onChange={() => patch({ blankOn: !state.blankOn })} />}
         />
       </ListCard>

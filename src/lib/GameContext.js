@@ -33,6 +33,7 @@ const defaultState = {
   historyWords: [],
   exiled: {},
   lastExile: null,
+  spyMisses: 0,
 };
 
 const Ctx = createContext(null);
@@ -65,6 +66,8 @@ function deal(s) {
     question: null,
     exiled: {},
     lastExile: null,
+    lastGuess: null,
+    spyMisses: 0,
   };
 }
 
@@ -142,13 +145,25 @@ export function GameProvider({ children }) {
       guess: (wordId) =>
         setState((s) => {
           const ok = s.word && s.word.id === wordId;
-          return {
-            ...s,
-            phase: "result",
-            winner: ok ? "spy" : "citizens",
-            log: [...s.log, { type: "guess", wordId, ok }],
-            historyWords: s.word ? [...s.historyWords, s.word.id].slice(-20) : s.historyWords,
-          };
+          const log = [...s.log, { type: "guess", wordId, ok }];
+          const hist = s.word ? [...s.historyWords, s.word.id].slice(-20) : s.historyWords;
+          if (ok) {
+            return { ...s, lastGuess: null, phase: "result", winner: "spy", log, historyWords: hist };
+          }
+          const spiesLeft = s.players.filter((p) => !s.exiled?.[p.id] && s.roles[p.id] === "spy").length;
+          const misses = (s.spyMisses || 0) + 1;
+          if (misses >= Math.max(1, spiesLeft)) {
+            return {
+              ...s,
+              spyMisses: misses,
+              lastGuess: null,
+              log,
+              phase: "result",
+              winner: "citizens",
+              historyWords: hist,
+            };
+          }
+          return { ...s, spyMisses: misses, lastGuess: { ok: false }, log };
         }),
       exile: (id) =>
         setState((s) => {
@@ -158,8 +173,11 @@ export function GameProvider({ children }) {
           const log = [...s.log, { type: "exile", id, role }];
           const hist = s.word ? [...s.historyWords, s.word.id].slice(-20) : s.historyWords;
           const spiesLeft = s.players.filter((p) => !exiled[p.id] && s.roles[p.id] === "spy").length;
+          const spiesGone = Object.values(exiled).filter((r) => r === "spy").length;
+          const spyTotal = Object.values(s.roles).filter((r) => r === "spy").length;
+          const hearts = spyTotal - (s.spyMisses || 0) - spiesGone;
           const citizensExiled = Object.values(exiled).filter((r) => r !== "spy").length;
-          if (spiesLeft === 0) {
+          if (spiesLeft === 0 || hearts <= 0) {
             return { ...s, exiled, log, lastExile: { id, role }, phase: "result", winner: "citizens", historyWords: hist };
           }
           if (citizensExiled >= 2) {
