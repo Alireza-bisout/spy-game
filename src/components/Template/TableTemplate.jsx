@@ -123,7 +123,7 @@ export default function TableTemplate() {
         <div>
           <p className="text-xs text-muted">نوبت</p>
           <p className="font-extrabold">
-            <i className={`fa-solid ${current.icon || "fa-user"} ml-1`} /> {current.name}
+            <i className={`fa-duotone ${current.icon || "fa-user"} ml-1`} /> {current.name}
           </p>
         </div>
         <div className="text-left">
@@ -145,7 +145,10 @@ export default function TableTemplate() {
           <span className="text-xs text-muted">جان جاسوس</span>
           <span className="flex gap-1.5 text-spy">
             {Array.from({ length: spyTotal }).map((_, i) => (
-              <i key={i} className={`fa-${i < heartsLeft ? "solid" : "regular"} fa-heart`} />
+              <i
+                key={i}
+                className={`${i < heartsLeft ? "fa-solid" : "fa-regular"} fa-heart text-lg`}
+              />
             ))}
           </span>
         </div>
@@ -165,7 +168,7 @@ export default function TableTemplate() {
             <ListRow
               key={p.id}
               last={i === alive.length - 1}
-              icon={<i className={`fa-solid ${p.icon || "fa-user"}`} />}
+              icon={<i className={`fa-duotone ${p.icon || "fa-user"}`} />}
               title={p.name}
               subtitle={idx === state.turnIndex ? "در حال اشاره" : sus >= 3 ? "سوءظن بالا" : "منتظر"}
               trailing={
@@ -355,7 +358,7 @@ export default function TableTemplate() {
         <p className="text-sm text-muted">اسم را بزن.</p>
         {alive.map((p) => (
           <Button key={p.id} variant="danger" onClick={() => { setVotePhase(null); setKickId(p.id); }}>
-            <i className={`fa-solid ${p.icon || "fa-user"} ml-1`} /> {p.name}
+            <i className={`fa-duotone ${p.icon || "fa-user"} ml-1`} /> {p.name}
           </Button>
         ))}
       </Sheet>

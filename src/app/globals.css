@@ -133,6 +133,18 @@ body {
 .fa-num {
   font-family: var(--font-num);
 }
+.fa-duotone {
+  --fa-primary-color: currentColor;
+  --fa-secondary-color: var(--accent);
+  --fa-secondary-opacity: 0.4;
+}
+.bg-accent .fa-duotone,
+.bg-spy .fa-duotone,
+.bg-accent-2 .fa-duotone {
+  --fa-primary-color: #f7ecec;
+  --fa-secondary-color: #f7ecec;
+  --fa-secondary-opacity: 0.9;
+}
 
 *,
 *::before,

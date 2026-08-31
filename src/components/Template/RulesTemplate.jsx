@@ -11,9 +11,9 @@ export default function RulesTemplate() {
     <div className="flex min-h-[calc(100dvh-2.5rem)] flex-col">
       <PageHeader back="/" title="قوانین" subtitle="کوتاه، برای خواندن وسط مهمانی." />
       <ListCard>
-        <ListRow icon={<i className="fa-solid fa-eye" />} title="نقش" subtitle="همه جز جاسوس کلمه را می‌بینند." />
-        <ListRow icon={<i className="fa-solid fa-comment" />} title="اشاره" subtitle="کلمه‌ای نزدیک بگو؛ نه لو، نه بی‌ربط." />
-        <ListRow last icon={<i className="fa-solid fa-scale-balanced" />} title="سوال و رأی" subtitle="دوگزینه‌ای، اخراج، حدس جاسوس." />
+        <ListRow icon={<i className="fa-duotone fa-eye" />} title="نقش" subtitle="همه جز جاسوس کلمه را می‌بینند." />
+        <ListRow icon={<i className="fa-duotone fa-comment" />} title="اشاره" subtitle="کلمه‌ای نزدیک بگو؛ نه لو، نه بی‌ربط." />
+        <ListRow last icon={<i className="fa-duotone fa-scale-balanced" />} title="سوال و رأی" subtitle="دوگزینه‌ای، اخراج، حدس جاسوس." />
       </ListCard>
       <div className="mt-auto pt-6">
         <Button onClick={() => router.push("/")}>خانه</Button>

@@ -17,7 +17,7 @@ export default function PageHeader({ title, subtitle, back }) {
           }}
           className="mb-3 flex items-center gap-2 text-sm text-muted"
         >
-          <i className="fa-solid fa-arrow-right" />
+          <i className="fa-duotone fa-arrow-right" />
           بازگشت
         </button>
       )}

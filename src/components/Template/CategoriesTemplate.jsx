@@ -40,7 +40,7 @@ export default function CategoriesTemplate() {
             <ListRow
               key={c.id}
               last={i === categories.length - 1}
-              icon={<i className={`fa-solid ${CATEGORY_ICONS[c.id] || "fa-layer-group"}`} />}
+              icon={<i className={`fa-duotone ${CATEGORY_ICONS[c.id] || "fa-layer-group"}`} />}
               title={c.fa}
               subtitle={`${n} کلمه`}
               trailing={<Toggle on={on} onChange={() => toggleCategory(c.id)} />}

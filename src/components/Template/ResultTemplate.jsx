@@ -83,7 +83,7 @@ export default function ResultTemplate() {
             <ListRow
               key={p.id}
               last={i === state.players.length - 1}
-              icon={<i className={`fa-solid ${p.icon || "fa-user"}`} />}
+              icon={<i className={`fa-duotone ${p.icon || "fa-user"}`} />}
               title={p.name}
               subtitle={out ? "اخراج‌شده" : undefined}
               trailing={

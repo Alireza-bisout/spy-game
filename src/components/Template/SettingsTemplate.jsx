@@ -19,24 +19,24 @@ export default function SettingsTemplate() {
       <PageHeader back="/" title="تنظیمات" subtitle="ظاهر، صدا و لرزش این دستگاه." />
       <ListCard>
         <ListRow
-          icon={<i className={`fa-solid ${dark ? "fa-moon" : "fa-sun"}`} />}
+          icon={<i className={`fa-duotone ${dark ? "fa-moon" : "fa-sun"}`} />}
           title="حالت تاریک"
           subtitle={dark ? "شب و پرونده‌های محرمانه" : "کاغذ و نور روز"}
           trailing={<Toggle on={dark} onChange={() => setTheme(dark ? "light" : "dark")} />}
         />
         <ListRow
-          icon={<i className="fa-solid fa-volume-high" />}
+          icon={<i className="fa-duotone fa-volume-high" />}
           title="صداهای لمس و بازی"
           trailing={<Toggle on={sfx} onChange={() => setSfx(!sfx)} />}
         />
         <ListRow
-          icon={<i className="fa-solid fa-music" />}
+          icon={<i className="fa-duotone fa-music" />}
           title="موسیقی پس‌زمینه"
           trailing={<Toggle on={music} onChange={() => setMusic(!music)} />}
         />
         <ListRow
           last
-          icon={<i className="fa-solid fa-mobile-screen" />}
+          icon={<i className="fa-duotone fa-mobile-screen" />}
           title="لرزش"
           trailing={<Toggle on={vibrate} onChange={() => setVibrate(!vibrate)} />}
         />

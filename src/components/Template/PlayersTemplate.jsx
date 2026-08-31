@@ -44,7 +44,7 @@ export default function PlayersTemplate() {
               className="grid h-9 w-9 place-items-center rounded-full text-muted hover:bg-paper"
               onClick={() => setPlayers(players.filter((_, idx) => idx !== i))}
             >
-              <i className="fa-solid fa-xmark" />
+              <i className="fa-duotone fa-xmark" />
             </button>
           </div>
         ))}
@@ -64,7 +64,7 @@ export default function PlayersTemplate() {
             ])
           }
         >
-          <i className="fa-solid fa-plus" /> افزودن
+          <i className="fa-duotone fa-plus" /> افزودن
         </Button>
         <Button
           variant="ghost"

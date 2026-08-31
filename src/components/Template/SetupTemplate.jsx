@@ -44,7 +44,7 @@ export default function SetupTemplate() {
       <p className="mb-2 px-1 text-xs font-semibold text-muted">نقش‌ها</p>
       <ListCard>
         <ListRow
-          icon={<i className="fa-solid fa-user-secret" />}
+          icon={<i className="fa-duotone fa-user-secret" />}
           title="تعداد جاسوس"
           subtitle={
             cap < 2
@@ -71,7 +71,7 @@ export default function SetupTemplate() {
         />
         <ListRow
           last
-          icon={<i className="fa-solid fa-ghost" />}
+          icon={<i className="fa-duotone fa-ghost" />}
           title="نقش سفید"
           subtitle="کلمه را نمی‌بیند؛ باید وانمود کند شهروند است"
           trailing={<Toggle on={state.blankOn} onChange={() => patch({ blankOn: !state.blankOn })} />}
@@ -81,7 +81,7 @@ export default function SetupTemplate() {
       <p className="mb-2 mt-5 px-1 text-xs font-semibold text-muted">زمان و دور</p>
       <ListCard>
         <ListRow
-          icon={<i className="fa-solid fa-rotate" />}
+          icon={<i className="fa-duotone fa-rotate" />}
           title="دور قبل از سوال"
           trailing={
             <Stepper
@@ -95,7 +95,7 @@ export default function SetupTemplate() {
         />
         <ListRow
           last
-          icon={<i className="fa-solid fa-clock" />}
+          icon={<i className="fa-duotone fa-clock" />}
           title="زمان هر اشاره"
           trailing={
             <Stepper
@@ -125,9 +125,9 @@ export default function SetupTemplate() {
             onClick={() => patch({ spyDifficulty: id })}
             trailing={
               state.spyDifficulty === id ? (
-                <i className="fa-solid fa-circle-check text-accent" />
+                <i className="fa-duotone fa-circle-check text-accent" />
               ) : (
-                <i className="fa-regular fa-circle text-line" />
+                <i className="fa-duotone fa-circle text-line" />
               )
             }
           />

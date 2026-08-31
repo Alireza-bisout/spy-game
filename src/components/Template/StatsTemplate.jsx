@@ -16,8 +16,8 @@ export default function StatsTemplate() {
     <div className="flex min-h-[calc(100dvh-2.5rem)] flex-col">
       <PageHeader back="/" title="آمارها" subtitle="برد و باخت دست‌های همین گوشی." />
       <ListCard>
-        <ListRow icon={<i className="fa-solid fa-user-secret" />} title="برد جاسوس" trailing={<span className="fa-num font-bold">{s.spy}</span>} />
-        <ListRow last icon={<i className="fa-solid fa-users" />} title="برد شهروندان" trailing={<span className="fa-num font-bold">{s.citizens}</span>} />
+        <ListRow icon={<i className="fa-duotone fa-user-secret" />} title="برد جاسوس" trailing={<span className="fa-num font-bold">{s.spy}</span>} />
+        <ListRow last icon={<i className="fa-duotone fa-users" />} title="برد شهروندان" trailing={<span className="fa-num font-bold">{s.citizens}</span>} />
       </ListCard>
       <div className="mt-auto pt-6">
         <Button onClick={() => router.push("/")}>خانه</Button>

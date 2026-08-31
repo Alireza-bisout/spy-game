@@ -23,7 +23,7 @@ export default function HomeTemplate() {
           className="grid h-10 w-10 place-items-center rounded-full border border-line bg-paper-2 text-accent"
           aria-label="تغییر تم"
         >
-          <i className={`fa-solid ${dark ? "fa-sun" : "fa-moon"}`} />
+          <i className={`fa-duotone ${dark ? "fa-sun" : "fa-moon"}`} />
         </button>
       </div>
       <header className="pb-6 pt-4 text-center">
@@ -38,7 +38,7 @@ export default function HomeTemplate() {
       <div className="mt-2 flex flex-col gap-3">
         <Link href="/play/players">
           <Button className="py-4 text-base">
-            <i className="fa-solid fa-play" /> شروع بازی جدید
+            <i className="fa-duotone fa-play" /> شروع بازی جدید
           </Button>
         </Link>
         {canResume && (
@@ -51,30 +51,30 @@ export default function HomeTemplate() {
       <ListCard className="mt-6">
         <ListRow
           onClick={() => router.push("/guide")}
-          icon={<i className="fa-solid fa-circle-info" />}
+          icon={<i className="fa-duotone fa-circle-info" />}
           title="راهنما"
           subtitle="نقش سفید، سوال، حدس و اخراج"
-          trailing={<i className="fa-solid fa-chevron-left text-xs text-muted" />}
+          trailing={<i className="fa-duotone fa-chevron-left text-xs text-muted" />}
         />
         <ListRow
           onClick={() => router.push("/rules")}
-          icon={<i className="fa-solid fa-book" />}
+          icon={<i className="fa-duotone fa-book" />}
           title="قوانین"
           subtitle="سه دقیقه تا شروع مهمانی"
-          trailing={<i className="fa-solid fa-chevron-left text-xs text-muted" />}
+          trailing={<i className="fa-duotone fa-chevron-left text-xs text-muted" />}
         />
         <ListRow
           onClick={() => router.push("/stats")}
-          icon={<i className="fa-solid fa-chart-simple" />}
+          icon={<i className="fa-duotone fa-chart-simple" />}
           title="آمارها"
-          trailing={<i className="fa-solid fa-chevron-left text-xs text-muted" />}
+          trailing={<i className="fa-duotone fa-chevron-left text-xs text-muted" />}
         />
         <ListRow
           last
           onClick={() => router.push("/settings")}
-          icon={<i className="fa-solid fa-gear" />}
+          icon={<i className="fa-duotone fa-gear" />}
           title="تنظیمات"
-          trailing={<i className="fa-solid fa-chevron-left text-xs text-muted" />}
+          trailing={<i className="fa-duotone fa-chevron-left text-xs text-muted" />}
         />
       </ListCard>
       <div className="mt-auto pt-8" />

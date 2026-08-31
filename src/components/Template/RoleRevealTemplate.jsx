@@ -78,7 +78,7 @@ export default function RoleRevealTemplate({ playerId }) {
           {!open ? (
             <>
               <span className="text-5xl text-accent">
-                <i className={`fa-solid ${player.icon || "fa-user"}`} />
+                <i className={`fa-duotone ${player.icon || "fa-user"}`} />
               </span>
               <h1 className="mt-5 text-3xl font-extrabold">{player.name}</h1>
               <p className="mt-3 text-muted">انگشت را یک ثانیه نگه دار</p>

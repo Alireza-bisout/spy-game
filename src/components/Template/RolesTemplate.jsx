@@ -21,7 +21,7 @@ export default function RolesTemplate() {
 
       {remaining.length === 0 ? (
         <div className="rounded-3xl border border-dashed border-accent bg-paper-2 p-8 text-center">
-          <i className="fa-solid fa-check text-2xl text-accent" />
+          <i className="fa-duotone fa-check text-2xl text-accent" />
           <p className="mt-3 font-semibold">همه نقش‌شان را دیدند</p>
           <p className="mt-1 text-sm text-muted">گوشی را وسط میز بگذارید و شروع کنید.</p>
         </div>
@@ -31,11 +31,11 @@ export default function RolesTemplate() {
             <ListRow
               key={p.id}
               last={i === remaining.length - 1}
-              icon={<i className={`fa-solid ${p.icon || "fa-user"}`} />}
+              icon={<i className={`fa-duotone ${p.icon || "fa-user"}`} />}
               title={p.name}
               subtitle="بزن تا صفحهٔ خودت باز شود"
               onClick={() => router.replace("/play/roles/reveal?id=" + p.id)}
-              trailing={<i className="fa-solid fa-chevron-left text-xs text-muted" />}
+              trailing={<i className="fa-duotone fa-chevron-left text-xs text-muted" />}
             />
           ))}
         </ListCard>
